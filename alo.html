@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Semangat Magang Bebe! ✨</title>
+    <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touc h-icon">
+  <style>
+    :root{
+      --bg1:#1e293b; /* navy gelap */
+      --bg2:#0f172a; /* biru kehitaman */
+      --bg3:#1e3a8a; /* biru deep */
+      --glass: rgba(255,255,255,0.08);
+      --shadow: 0 12px 30px rgba(0,0,0,.5);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: radial-gradient(1200px 800px at 20% 20%, var(--bg1), transparent 60%),
+                  radial-gradient(1000px 1000px at 80% 30%, var(--bg2), transparent 60%),
+                  radial-gradient(900px 900px at 50% 80%, var(--bg3), transparent 60%),
+                  linear-gradient(135deg,#0f172a,#1e293b);
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      overflow:hidden;
+      color:#f1f5f9;
+    }
+
+    /* floating emojis background */
+    .floaters span{
+      position:fixed; 
+      font-size: clamp(18px, 3vw, 28px);
+      opacity:.25;
+      animation: floaty 12s linear infinite;
+      user-select:none;
+      pointer-events:none;
+    }
+    .floaters span:nth-child(odd){ animation-duration: 15s; opacity:.18 }
+    @keyframes floaty{ from{ transform: translateY(110vh) rotate(0deg);} to{ transform: translateY(-20vh) rotate(360deg);} }
+
+    .card{
+      background: var(--glass);
+      backdrop-filter: blur(10px) saturate(120%);
+      -webkit-backdrop-filter: blur(10px) saturate(120%);
+      padding:32px 28px;
+      border-radius:28px;
+      box-shadow: var(--shadow);
+      max-width: 480px;
+      width: calc(100% - 32px);
+      animation: popIn .9s cubic-bezier(.2,.8,.2,1);
+      position:relative;
+      z-index:10;
+      border:1px solid rgba(255,255,255,.2);
+    }
+
+    h1{
+      font-size: clamp(22px, 2.8vw, 28px);
+      margin:0 0 10px;
+    }
+    p{
+      font-size: clamp(14px, 2.6vw, 16px);
+      margin:0 0 18px;
+      min-height:40px;
+      animation: fade .6s ease;
+    }
+    .emoji{ font-size: clamp(28px, 4vw, 36px); margin-bottom:10px; }
+
+    button{
+      background: linear-gradient(90deg,#2563eb,#1d4ed8,#0ea5e9);
+      color:#fff;
+      border:none;
+      padding:12px 22px;
+      border-radius:999px;
+      font-size:16px;
+      cursor:pointer;
+      transition:.25s ease;
+      box-shadow: 0 8px 18px rgba(59,130,246,.45);
+      position: relative;
+      isolation: isolate;
+      animation: wiggle 1.6s ease-in-out infinite;
+    }
+    button:hover{ transform: translateY(-2px) scale(1.04); box-shadow: 0 10px 22px rgba(59,130,246,.6); }
+    button:active{ transform: translateY(0) scale(0.98); }
+
+    /* Glowy ring */
+    button::after{
+      content:""; position:absolute; inset:-4px; border-radius:999px; z-index:-1;
+      background: radial-gradient(60% 120% at 50% 50%, rgba(255,255,255,.4), transparent 60%),
+                  conic-gradient(from 0deg, #2563eb, #1d4ed8, #0ea5e9, #2563eb);
+      filter: blur(14px); opacity:.4; transition: .3s;
+    }
+    button:hover::after{ opacity:.7; filter: blur(18px); }
+
+    .note{ margin-top:14px; font-size:13px; color:#94a3b8 }
+
+    @keyframes popIn{ 0%{transform:scale(.9); opacity:0} 70%{transform:scale(1.02)} 100%{transform:scale(1); opacity:1} }
+    @keyframes fade{ from{opacity:0} to{opacity:1} }
+    @keyframes wiggle{ 0%,100%{ transform: rotate(-2deg)} 50%{ transform: rotate(2deg)} }
+
+    canvas#stars{
+      position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:5;
+    }
+  </style>
+</head>
+<body>
+  <!-- floating background emojis -->
+  <div class="floaters" aria-hidden="true">
+    <span style="left:8%; animation-delay:-2s">💙</span>
+    <span style="left:22%; animation-delay:-6s">⭐</span>
+    <span style="left:38%; animation-delay:-9s">🫶</span>
+    <span style="left:57%; animation-delay:-4s">🌌</span>
+    <span style="left:74%; animation-delay:-7s">✨</span>
+    <span style="left:90%; animation-delay:-1s">😎</span>
+  </div>
+
+  <canvas id="stars"></canvas>
+
+  <div class="card">
+    <h1>Semangat magang ya, <span id="name">Bebe</span>! </h1>
+    <p id="quote">ingat bebe harus bikin orang tua bangga</p>
+    <button id="btn">klik dongg sayangg 💕</button>
+    <p class="note">Nadia selalu dukung apapun yang sayang lakuin</p>
+  </div>
+
+  <audio id="popSound" src="https://www.myinstants.com/media/sounds/pop-cat.mp3"></audio>
+
+  <script>
+    const NAME = "Bebe"; 
+    const QUOTES = [
+      "Lovee u sayanggkuu cintakuuu",
+      "aloww bebeee",
+      "semangat ya sayangg magangnyaa",
+      "Jangan lupa istirahat ya sayangg",
+      "Nadia tau pasti sayang bisa nyelesain magangnyaa baik baik",
+      "Baik baik hati hati ya sayanggg magangnyaa",
+      "Nadia selalu nunggu orija buat balik untuk ngabisin waktu buat Nadia hehe"
+    ];
+
+    document.getElementById('name').textContent = NAME;
+    const quoteEl = document.getElementById('quote');
+    const btn = document.getElementById('btn');
+    const sound = document.getElementById('popSound');
+    let i = 0;
+
+    btn.addEventListener('click', ()=>{
+      i = (i+1)%QUOTES.length;
+      quoteEl.textContent = QUOTES[i];
+      quoteEl.style.animation = 'none'; quoteEl.offsetHeight; quoteEl.style.animation = 'fade .6s ease';
+      try{ sound.currentTime = 0; sound.play(); }catch(e){}
+    });
+
+    // ==== Twinkle Stars Effect ====
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    resize();
+    window.addEventListener('resize', resize);
+
+    let stars = [];
+    const STAR_COUNT = 120;
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      stars = [];
+      for (let i = 0; i < STAR_COUNT; i++) {
+        stars.push(createStar());
+      }
+    }
+
+    function createStar() {
+      return {
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.8 + 0.6,
+        opacity: Math.random(),
+        fade: Math.random() * 0.02 + 0.005,
+        speed: Math.random() * 0.3 + 0.1
+      };
+    }
+
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let star of stars) {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${star.opacity})`;
+        ctx.fill();
+
+        star.opacity += star.fade;
+        if (star.opacity <= 0 || star.opacity >= 1) {
+          star.fade = -star.fade;
+        }
+
+        star.y += star.speed;
+        if (star.y > canvas.height) {
+          star.x = Math.random() * canvas.width;
+          star.y = -2;
+        }
+      }
+      requestAnimationFrame(drawStars);
+    }
+
+    drawStars();
+  </script>
+</body>
+</html>
